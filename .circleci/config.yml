@@ -9,6 +9,7 @@ executors:
     resource_class: xlarge
     environment:
       CARGO_INCREMENTAL: 0
+      CARGO_PROFILE_DEV_STRIP: true
   docker:
     docker:
       - image: cimg/rust:1.59
@@ -16,6 +17,7 @@ executors:
     working_directory: /mnt/ramdisk/project
     environment:
       CARGO_INCREMENTAL: 0
+      CARGO_PROFILE_DEV_STRIP: true
       TMPDIR: /mnt/ramdisk
 
 commands:
@@ -39,16 +41,26 @@ commands:
       - run:
           name: Install Rust
           command: curl https://sh.rustup.rs -sSf | sh -s -- -y
-  install-musl-tools:
+  install-rust-minimal:
+    steps:
+      - run:
+          name: Install Rust
+          command: curl https://sh.rustup.rs -sSf | sh -s --  --profile=minimal -y
+  install-cross-compile:
     steps:
       - run:
           name: Install musl tools
           command: sudo apt-get update && sudo apt-get install musl-tools --no-install-recommends
-  install-musl-target:
-    steps:
       - run:
           name: Install musl target
           command: rustup target add x86_64-unknown-linux-musl
+  install-pack:
+    steps:
+      - pack/install-pack:
+          version: 0.24.0
+      - run:
+          name: Configure Pack pull-policy
+          command: pack config pull-policy if-not-present
 
 jobs:
   lint-docker:
@@ -94,7 +106,7 @@ jobs:
     steps:
       - checkout
       - restore-cargo-cache
-      - install-rust
+      - install-rust-minimal
       - run:
           name: Run tests
           command: cargo test --all-features --locked
@@ -107,10 +119,8 @@ jobs:
       - setup_remote_docker:
           version: 20.10.11
       - restore-cargo-cache
-      - install-musl-tools
-      - install-musl-target
-      - pack/install-pack:
-          version: 0.24.0
+      - install-cross-compile
+      - install-pack
       - run:
           name: Run tests
           command: cargo test --all-features --locked -- --ignored
@@ -121,45 +131,12 @@ jobs:
     steps:
       - checkout
       - restore-cargo-cache
-      - install-rust
-      - install-musl-tools
-      - install-musl-target
-      - pack/install-pack:
-          version: 0.24.0
+      - install-rust-minimal
+      - install-cross-compile
+      - install-pack
       - run:
           name: Run tests
           command: cargo test --all-features --locked -- --ignored
-      - save-cargo-cache
-
-  all-tests-docker:
-    executor: docker
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: 20.10.11
-      - restore-cargo-cache
-      - install-musl-tools
-      - install-musl-target
-      - pack/install-pack:
-          version: 0.24.0
-      - run:
-          name: Run tests
-          command: cargo test --all-features --locked -- --include-ignored
-      - save-cargo-cache
-
-  all-tests-machine:
-    executor: machine
-    steps:
-      - checkout
-      - restore-cargo-cache
-      - install-rust
-      - install-musl-tools
-      - install-musl-target
-      - pack/install-pack:
-          version: 0.24.0
-      - run:
-          name: Run tests
-          command: cargo test --all-features --locked -- --include-ignored
       - save-cargo-cache
 
 workflows:
@@ -171,5 +148,3 @@ workflows:
       - unit-test-machine
       - integration-test-docker
       - integration-test-machine
-      - all-tests-docker
-      - all-tests-machine
