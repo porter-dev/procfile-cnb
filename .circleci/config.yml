@@ -44,10 +44,13 @@ commands:
   install-rust-minimal:
     steps:
       - run:
-          name: Install Rust
+          name: Install Rust (minimal profile)
           command: curl https://sh.rustup.rs -sSf | sh -s --  --profile=minimal -y
   install-cross-compile:
     steps:
+      - run:
+          name: Remove slow third-party APT sources
+          command: sudo rm -f /etc/apt/sources.list.d/*
       - run:
           name: Install musl tools
           command: sudo apt-get update && sudo apt-get install musl-tools --no-install-recommends
@@ -116,9 +119,9 @@ jobs:
     executor: docker
     steps:
       - checkout
+      - restore-cargo-cache
       - setup_remote_docker:
           version: 20.10.11
-      - restore-cargo-cache
       - install-cross-compile
       - install-pack
       - run:
