@@ -6,7 +6,7 @@ executors:
   machine:
     machine:
       image: ubuntu-2004:202201-02
-    resource_class: xlarge
+    resource_class: 2xlarge
     environment:
       CARGO_INCREMENTAL: 0
       CARGO_PROFILE_DEV_STRIP: true
