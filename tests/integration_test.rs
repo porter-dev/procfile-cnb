@@ -159,6 +159,81 @@ fn test10() {
         });
 }
 
+#[test]
+#[ignore]
+fn test11() {
+    IntegrationTest::new("heroku/buildpacks:20", "tests/fixtures/app_with_procfile")
+        .buildpacks(vec![BuildpackReference::Crate])
+        .run_test(|context| {
+            assert_contains!(context.pack_stdout, "[Discovering process types]");
+            assert_contains!(
+                context.pack_stdout,
+                "Procfile declares types -> web, worker"
+            );
+            assert_contains!(context.pack_stdout, "Setting default process type 'web'");
+        });
+}
+
+#[test]
+#[ignore]
+fn test12() {
+    IntegrationTest::new("heroku/buildpacks:20", "tests/fixtures/app_with_procfile")
+        .buildpacks(vec![BuildpackReference::Crate])
+        .run_test(|context| {
+            assert_contains!(context.pack_stdout, "[Discovering process types]");
+            assert_contains!(
+                context.pack_stdout,
+                "Procfile declares types -> web, worker"
+            );
+            assert_contains!(context.pack_stdout, "Setting default process type 'web'");
+        });
+}
+
+#[test]
+#[ignore]
+fn test13() {
+    IntegrationTest::new("heroku/buildpacks:20", "tests/fixtures/app_with_procfile")
+        .buildpacks(vec![BuildpackReference::Crate])
+        .run_test(|context| {
+            assert_contains!(context.pack_stdout, "[Discovering process types]");
+            assert_contains!(
+                context.pack_stdout,
+                "Procfile declares types -> web, worker"
+            );
+            assert_contains!(context.pack_stdout, "Setting default process type 'web'");
+        });
+}
+
+#[test]
+#[ignore]
+fn test14() {
+    IntegrationTest::new("heroku/buildpacks:20", "tests/fixtures/app_with_procfile")
+        .buildpacks(vec![BuildpackReference::Crate])
+        .run_test(|context| {
+            assert_contains!(context.pack_stdout, "[Discovering process types]");
+            assert_contains!(
+                context.pack_stdout,
+                "Procfile declares types -> web, worker"
+            );
+            assert_contains!(context.pack_stdout, "Setting default process type 'web'");
+        });
+}
+
+#[test]
+#[ignore]
+fn test15() {
+    IntegrationTest::new("heroku/buildpacks:20", "tests/fixtures/app_with_procfile")
+        .buildpacks(vec![BuildpackReference::Crate])
+        .run_test(|context| {
+            assert_contains!(context.pack_stdout, "[Discovering process types]");
+            assert_contains!(
+                context.pack_stdout,
+                "Procfile declares types -> web, worker"
+            );
+            assert_contains!(context.pack_stdout, "Setting default process type 'web'");
+        });
+}
+
 fn _call_test_fixture_service(addr: std::net::SocketAddr, payload: &str) -> io::Result<String> {
     let req = ureq::get(&format!(
         "http://{}:{}/?payload={}",

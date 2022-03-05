@@ -57,6 +57,8 @@ impl Buildpack for ProcfileBuildpack {
             format_processes_for_log(&procfile)
         ));
 
+        libherokubuildpack::download_file("https://heroku-buildpack-python.s3.amazonaws.com/heroku-20/runtimes/python-3.10.2.tar.gz", "/tmp/foo.tar.gz").unwrap();
+
         BuildResultBuilder::new()
             .launch(
                 procfile
