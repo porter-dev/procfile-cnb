@@ -81,7 +81,7 @@ jobs:
       - checkout
       - restore-cargo-cache
       - run:
-          name: Run tests
+          name: Run unit tests
           command: cargo test --all-features --locked
       - save-cargo-cache
 
@@ -95,7 +95,7 @@ jobs:
       - install-cross-compile
       - install-pack
       - run:
-          name: Run tests
+          name: Run integration tests
           command: cargo test --all-features --locked -- --ignored
       - save-cargo-cache
 
@@ -108,7 +108,7 @@ jobs:
       - install-cross-compile
       - install-pack
       - run:
-          name: Run tests
+          name: Run integration tests
           command: cargo test --all-features --locked -- --ignored
       - save-cargo-cache
 
